@@ -10,7 +10,7 @@ public class Spship_changer : MonoBehaviour
     public GameObject S_1,S_2,S_3,S_4,S_5,S_6;
     void Start()
     {
-
+        namespaceship=UIvarables.namespaceship;
     }
     void Update()
     {
@@ -28,6 +28,7 @@ public class Spship_changer : MonoBehaviour
             S_6.SetActive(false);
             followplayer.player=S_1.transform;
             bulletcollision.damage=Spship_details.dmg_S1;
+            HealthBar.health=Spship_details.Hp_S1;
         }
         else if(namespaceship=="S_2")
         {
@@ -39,6 +40,7 @@ public class Spship_changer : MonoBehaviour
             S_6.SetActive(false);
             followplayer.player=S_2.transform;
             bulletcollision.damage=Spship_details.dmg_S2;
+            HealthBar.health=Spship_details.Hp_S2;
         }
         else if(namespaceship=="S_3")
         {
@@ -50,6 +52,7 @@ public class Spship_changer : MonoBehaviour
             S_6.SetActive(false);
             followplayer.player=S_3.transform;
             bulletcollision.damage=Spship_details.dmg_S3;
+            HealthBar.health=Spship_details.Hp_S3;
         }
         else if(namespaceship=="S_4")
         {
@@ -61,6 +64,7 @@ public class Spship_changer : MonoBehaviour
             S_6.SetActive(false);
             followplayer.player=S_4.transform;
             bulletcollision.damage=Spship_details.dmg_S4;
+            HealthBar.health=Spship_details.Hp_S4;
         }
         else if(namespaceship=="S_5")
         {
@@ -72,6 +76,7 @@ public class Spship_changer : MonoBehaviour
             S_6.SetActive(false);
             followplayer.player=S_5.transform;
             bulletcollision.damage=Spship_details.dmg_S5;
+            HealthBar.health=Spship_details.Hp_S5;
         }
         else if(namespaceship=="S_6")
         {
@@ -83,6 +88,7 @@ public class Spship_changer : MonoBehaviour
             S_6.SetActive(true);
             followplayer.player=S_6.transform;
             bulletcollision.damage=Spship_details.dmg_S6;
+            HealthBar.health=Spship_details.Hp_S6;
         }
     }
     

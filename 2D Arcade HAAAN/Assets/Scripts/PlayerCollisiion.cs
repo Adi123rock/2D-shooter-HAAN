@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class PlayerCollisiion : MonoBehaviour
 {
-    public Transform camerapos;
+    public static bool shield=true;// For shield (powerup)
+    public Transform camerapos;//for boss
     Vector3 offset;
     public bool once=true;
     public GameObject gameovr;
@@ -18,11 +19,20 @@ public class PlayerCollisiion : MonoBehaviour
     public GameObject explosionEffect;
     public Text healthtext;
     //public GameMAnager gamem;
+    void Start()
+    {
+        Changehealth();
+        healthtext.text="HP:"+health.ToString();
+    }
+    public void Changehealth()
+    {
+        health=HealthBar.health;
+    }
     void OnTriggerEnter2D (Collider2D Collisioninfo)
     {
         Debug.Log("ontrigger");
         Debug.Log(Collisioninfo);
-        if(Collisioninfo.tag=="Bullet")
+        if(Collisioninfo.tag=="Bullet" && shield)
         {
             if(health>0){
                 health-=50f;
@@ -70,7 +80,7 @@ public class PlayerCollisiion : MonoBehaviour
     {
         Time.timeScale=1f;
         once=true;
-        health=100f;
+        health=HealthBar.health;
         healthtext.text="HP:"+health.ToString();
         movement.enabled=true;
         FindObjectOfType<HealthBar>().Fullhp();

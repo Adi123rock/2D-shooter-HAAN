@@ -1173,7 +1173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crtn: {x: 0, y: 4, z: -10}
-  player: {fileID: 1092433382}
+  player1: {fileID: 0}
 --- !u!1 &599225146
 GameObject:
   m_ObjectHideFlags: 0
@@ -2101,6 +2101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 2889370819680755051, guid: 3a5485e21348aeb418ab647cdea450fb, type: 3}
+  firedblt: {fileID: 0}
   firingspeedplayer: 100
   offset: {x: -0.09, y: 0.3, z: 0}
   player: {fileID: 1092433382}
@@ -2729,7 +2730,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22393e6ff6dd0e428654543b864d349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obst: {fileID: 0}
+  animator: {fileID: 0}
+  animator2: {fileID: 0}
+  health: 100
   explosionEffect: {fileID: 1000011797152326, guid: 9393d9cea1b1644429d745dd3004af0d, type: 3}
   obstacle: {fileID: 0}
 --- !u!114 &1037065834
@@ -4391,7 +4394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f79e0dab20adf3e46bd1921b2925ab79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chship: {fileID: 0}
   scoretext: {fileID: 1037065834}
   After_lose1: {fileID: 0}
   After_lose2: {fileID: 0}
@@ -4511,6 +4513,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2fed474216ee1443a5a6e6d67c98a79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lvltext: {fileID: 0}
+  cointext: {fileID: 0}
   lvlselect: {fileID: 0}
   gamec: {fileID: 2066193694}
 --- !u!1 &2111182460

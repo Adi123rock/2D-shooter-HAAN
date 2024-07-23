@@ -7,28 +7,168 @@ using UnityEngine.SceneManagement;
 
 public class Spaceship : MonoBehaviour
 {
+    public TextMeshProUGUI Buycost,Upgcost;
     public TextMeshProUGUI Lvl_Spship, Hp_Spship, Dmg_Spship;
     public GameObject buy_button, upgrade_button;
     public GameObject next_button, prev_button, S_1, S_2, S_3, S_4, S_5, S_6;
     int i = 0;
     void Start()
     {
-        Lvl_Spship.text = "Level:" + Spship_details.Lvl_S1.ToString();
-        Dmg_Spship.text = "Damage:" + Spship_details.dmg_S1.ToString();
-        Hp_Spship.text = "Hp:" + Spship_details.Hp_S1.ToString();
-        prev_button.SetActive(false);
-        S_1.SetActive(true);
-        S_2.SetActive(false);
-        if (Spship_details.S1)
+        nextspaceship();
+    }
+    public void BuySpacship()
+    {
+        if (S_2.activeInHierarchy)
         {
-            buy_button.SetActive(false);
-            upgrade_button.SetActive(true);
+            if(UIvarables.coins>Spship_details.Buycost_S2 && Spship_details.S2)
+            {
+                UIvarables.coins-=Spship_details.Buycost_S2;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT BUY");
+            }
         }
-        else
+        else if (S_3.activeInHierarchy)
         {
-            buy_button.SetActive(true);
-            upgrade_button.SetActive(false);
+            if(UIvarables.coins>Spship_details.Buycost_S3 && Spship_details.S3)
+            {
+                UIvarables.coins-=Spship_details.Buycost_S3;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT BUY");
+            }
         }
+        else if (S_4.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Buycost_S4 && Spship_details.S4)
+            {
+                UIvarables.coins-=Spship_details.Buycost_S4;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT BUY");
+            }
+        }
+        else if (S_5.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Buycost_S5 && Spship_details.S5)
+            {
+                UIvarables.coins-=Spship_details.Buycost_S5;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT BUY");
+            }
+        }
+        else if (S_6.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Buycost_S6 && Spship_details.S6)
+            {
+                UIvarables.coins-=Spship_details.Buycost_S6;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT BUY");
+            }
+        }
+    }
+    public void UpgSpacship()
+    {
+        if (S_1.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Upgcost_S1 && Spship_details.S1)
+            {
+                UIvarables.coins-=Spship_details.Upgcost_S1;
+                Spship_details.Upgcost_S1+=500;
+                Spship_details.Lvl_S1+=1;
+                Spship_details.dmg_S1+=10;
+                Spship_details.Hp_S1+=50;
+                // Upgcost.text=Spship_details.Upgcost_S1.ToString();
+                
+            }
+            else
+            {
+                Debug.LogError("YOU CANNOT UPGRADE");
+            }
+        }
+        else if (S_2.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Upgcost_S2 && Spship_details.S2)
+            {
+                UIvarables.coins-=Spship_details.Upgcost_S2;
+                Spship_details.Upgcost_S2+=500;
+                Spship_details.Lvl_S2+=1;
+                Spship_details.dmg_S2+=10;
+                Spship_details.Hp_S2+=50;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT UPGRADE");
+            }
+        }
+        else if (S_3.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Upgcost_S3 && Spship_details.S3)
+            {
+                UIvarables.coins-=Spship_details.Upgcost_S3;
+                Spship_details.Upgcost_S3+=500;
+                Spship_details.Lvl_S3+=1;
+                Spship_details.dmg_S3+=10;
+                Spship_details.Hp_S3+=50;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT UPGRADE");
+            }
+        }
+        else if (S_4.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Upgcost_S4 && Spship_details.S4)
+            {
+                UIvarables.coins-=Spship_details.Upgcost_S4;
+                Spship_details.Upgcost_S4+=500;
+                Spship_details.Lvl_S4+=1;
+                Spship_details.dmg_S4+=10;
+                Spship_details.Hp_S4+=50;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT UPGRADE");
+            }
+        }
+        else if (S_5.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Upgcost_S5 && Spship_details.S5)
+            {
+                UIvarables.coins-=Spship_details.Upgcost_S5;
+                Spship_details.Upgcost_S5+=500;
+                Spship_details.Lvl_S5+=1;
+                Spship_details.dmg_S5+=10;
+                Spship_details.Hp_S5+=50;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT UPGRADE");
+            }
+        }
+        else if (S_6.activeInHierarchy)
+        {
+            if(UIvarables.coins>Spship_details.Upgcost_S6 && Spship_details.S6)
+            {
+                UIvarables.coins-=Spship_details.Upgcost_S6;
+                Spship_details.Upgcost_S6+=500;
+                Spship_details.Lvl_S6+=1;
+                Spship_details.dmg_S6+=10;
+                Spship_details.Hp_S6+=50;
+            }
+            else 
+            {
+                Debug.LogError("YOU CANNOT UPGRADE");
+            }
+        }
+        nextspaceship();
     }
     public void SelectSpaceship()
     {
@@ -176,11 +316,13 @@ public class Spaceship : MonoBehaviour
             if (Spship_details.S1)
             {
                 buy_button.SetActive(false);
+                Upgcost.text=Spship_details.Upgcost_S1.ToString();
                 upgrade_button.SetActive(true);
             }
             else
             {
                 buy_button.SetActive(true);
+                Buycost.text=Spship_details.Buycost_S1.ToString();
                 upgrade_button.SetActive(false);
             }
         }
@@ -196,11 +338,13 @@ public class Spaceship : MonoBehaviour
             if (Spship_details.S2)
             {
                 buy_button.SetActive(false);
+                Upgcost.text=Spship_details.Upgcost_S2.ToString();
                 upgrade_button.SetActive(true);
             }
             else
             {
                 buy_button.SetActive(true);
+                Buycost.text=Spship_details.Buycost_S2.ToString();
                 upgrade_button.SetActive(false);
             }
         }
@@ -215,11 +359,13 @@ public class Spaceship : MonoBehaviour
             if (Spship_details.S3)
             {
                 buy_button.SetActive(false);
+                Upgcost.text=Spship_details.Upgcost_S3.ToString();
                 upgrade_button.SetActive(true);
             }
             else
             {
                 buy_button.SetActive(true);
+                Buycost.text=Spship_details.Buycost_S3.ToString();
                 upgrade_button.SetActive(false);
             }
         }
@@ -234,11 +380,13 @@ public class Spaceship : MonoBehaviour
             if (Spship_details.S4)
             {
                 buy_button.SetActive(false);
+                Upgcost.text=Spship_details.Upgcost_S4.ToString();
                 upgrade_button.SetActive(true);
             }
             else
             {
                 buy_button.SetActive(true);
+                Buycost.text=Spship_details.Buycost_S4.ToString();
                 upgrade_button.SetActive(false);
             }
         }
@@ -254,11 +402,13 @@ public class Spaceship : MonoBehaviour
             if (Spship_details.S5)
             {
                 buy_button.SetActive(false);
+                Upgcost.text=Spship_details.Upgcost_S5.ToString();
                 upgrade_button.SetActive(true);
             }
             else
             {
                 buy_button.SetActive(true);
+                Buycost.text=Spship_details.Buycost_S5.ToString();
                 upgrade_button.SetActive(false);
             }
         }
@@ -273,11 +423,13 @@ public class Spaceship : MonoBehaviour
             if (Spship_details.S6)
             {
                 buy_button.SetActive(false);
+                Upgcost.text=Spship_details.Upgcost_S6.ToString();
                 upgrade_button.SetActive(true);
             }
             else
             {
                 buy_button.SetActive(true);
+                Buycost.text=Spship_details.Buycost_S6.ToString();
                 upgrade_button.SetActive(false);
             }
         }

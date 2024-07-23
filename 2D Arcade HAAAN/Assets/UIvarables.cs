@@ -15,7 +15,6 @@ public class UIvarables : MonoBehaviour
     {
         nocoins.text=coins.ToString();
         nodiamonds.text=diamonds.ToString();
-        
     }
     // public void ship_1commisioned()
     // {

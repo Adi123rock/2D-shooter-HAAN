@@ -257,8 +257,8 @@ GameObject:
   - component: {fileID: 6377803665898424583}
   - component: {fileID: 1913270502274946485}
   - component: {fileID: 5444834739826712414}
+  - component: {fileID: 6955077776028069563}
   - component: {fileID: 8495147831240362812}
-  - component: {fileID: 8151765059363065840}
   m_Layer: 0
   m_Name: objects 1
   m_TagString: Obstacle
@@ -274,7 +274,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2235273687329967111}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -10.38, y: 8.67, z: -10.44087}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -407,6 +407,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.7500727}
   m_EdgeRadius: 0
+--- !u!114 &6955077776028069563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2235273687329967111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efbfaa7ce3ec7bb4bbe31ea217457ee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blts_no: 2
+  wrt_camera: {fileID: 0}
+  enb: {fileID: 5625352825241509452}
+  enbforce: 20000
+  enblt: {fileID: 7380570413465460688}
 --- !u!114 &8495147831240362812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,24 +436,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22393e6ff6dd0e428654543b864d349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   health: 100
-  headinganimator: {fileID: 0}
-  villananimator: {fileID: 0}
   explosionEffect: {fileID: 5529488906993305970}
   obstacle: {fileID: 2235273687329967111}
---- !u!114 &8151765059363065840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2235273687329967111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7268b7252def6fc41bca463463ca2fe6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bullet: {fileID: 6298366604251745049, guid: 5ee1d1a809d9fc2448a0d242286496a3, type: 3}
 --- !u!1001 &5530206333472361268
 PrefabInstance:
   m_ObjectHideFlags: 0

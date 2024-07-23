@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    float health=100f;
+    public static float health=100f;
     public Slider slider;
     void Start()
     {
         slider.maxValue=health;
         slider.value=health;
+        FindObjectOfType<PlayerCollisiion>().Changehealth();
     }
     public void Dechbar()
     {

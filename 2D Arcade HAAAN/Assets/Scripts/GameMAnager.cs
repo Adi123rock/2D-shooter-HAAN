@@ -14,28 +14,9 @@ public class GameMAnager : MonoBehaviour
     // {
     //     levels_lock.L02_lock.SetActive(false);
     // }
-    
-    public void BuyS1A()
+    public void Wave_lvls()
     {
-        if(UIvarables.CompLvlno>4 && UIvarables.coins>10000)
-        {
-            Spship_details.S1=true;
-            Debug.Log("KHARID LIYA");
-            UIvarables.coins-=10000;
-            // FindObjectOfType<UIvarables>().ship_1commisioned();
-            //ship1A.damage=20;
-        }
-        else
-        {
-            if(UIvarables.CompLvlno<5)
-            {
-                Debug.LogError("FIRST REACH LEVEL 5");
-            }
-            else
-            {
-                Debug.LogError("NOT ENOUGH MONEY");
-            }
-        }
+        SceneManager.LoadScene("Wave_lvls");
     }
     public void Lost1()
     {
@@ -51,6 +32,7 @@ public class GameMAnager : MonoBehaviour
             Time.timeScale=1f;
             After_lose1.SetActive(false);
             After_lose2.SetActive(true);
+            Startgame.EnemiesKilled=0;
         }
         cont=false;
         

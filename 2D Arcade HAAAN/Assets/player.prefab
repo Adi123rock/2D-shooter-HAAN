@@ -358,7 +358,6 @@ MonoBehaviour:
   player: {fileID: 378303692749767920}
   bullt: {fileID: 113814304139855761, guid: 3a5485e21348aeb418ab647cdea450fb, type: 3}
   blt: {fileID: 7607459025597166842, guid: 3a5485e21348aeb418ab647cdea450fb, type: 3}
-  firingspeedplayer: 10000
 --- !u!1001 &8162660087906346889
 PrefabInstance:
   m_ObjectHideFlags: 0

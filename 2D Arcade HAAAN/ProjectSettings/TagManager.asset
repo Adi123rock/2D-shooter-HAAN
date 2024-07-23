@@ -9,6 +9,7 @@ TagManager:
   - Gamecomp
   - Boss
   - PlyBullet
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -16,9 +17,9 @@ TagManager:
   - 
   - Water
   - UI
+  - boost
   - 
-  - objects
-  - Background
+  - 
   - 
   - 
   - 
@@ -45,4 +46,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: spship
+    uniqueID: 3531141913
+    locked: 0
+  - name: boost
+    uniqueID: 4122501861
     locked: 0

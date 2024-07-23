@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class firebullet : MonoBehaviour
 {
-    public GameObject bullet,firedblt;
+    public GameObject bullet;
+    GameObject firedblt;
     public Vector3 offset;
     public Transform player,bullt;
     public Rigidbody2D blt;
@@ -23,7 +24,7 @@ public class firebullet : MonoBehaviour
             firedblt = Instantiate(bullet, player.position + offset, player.rotation);
             blt = firedblt.GetComponent<Rigidbody2D>();
             Debug.Log(blt);
-            firedblt.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 2f);
+            firedblt.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 8f);
             // if (blt != null)
             // {
             //     Debug.LogError("Yes Rigidbody component");
