@@ -18,7 +18,7 @@ public class Lvlcmp : MonoBehaviour
     void Update()
     {
         current_time+=1*Time.deltaTime;
-        timetext.text=current_time.ToString("0");
+        //timetext.text=current_time.ToString("0");
     }
     void OnTriggerEnter2D(Collider2D collider)
     {
