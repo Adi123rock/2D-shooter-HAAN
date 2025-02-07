@@ -1,0 +1,71 @@
+import * as THREE from 'three';
+export function createCameraManager(gameWindow) {
+    const DEG2RAD = Math.PI / 180;
+
+    // const LEFT_MOUSE_BUTTON = 1;
+    const MIDDLE_MOUSE_BUTTON = 4;
+    const RIGHT_MOUSE_BUTTON = 2;
+
+    const MIN_CAMERA_RADIUS = 10;//Minimum camera radius
+    const MAX_CAMERA_RADIUS = 100;//Maximum camera radius
+    const MIN_CAMERA_ELEVATION = 10;
+    const MAX_CAMERA_ELEVATION = 90;
+
+
+    const AZIMUTH_SENSITIVITY = 0.2;
+    const ELEVATION_SENSITIVITY = 0.2;
+    const ZOOM_SENSITIVITY = 0.01;
+    const PAN_SENSITIVITY = -0.01;
+    const Y_AXIS = new THREE.Vector3(0, 1, 0);
+
+    //varibales
+    const camera = new THREE.PerspectiveCamera(45, gameWindow.offsetWidth / gameWindow.offsetHeight, 0.1, 1000);
+    let cameraOrigin = new THREE.Vector3(6, 0, 6);//default zero vector
+    let cameraRadius = 30;
+    let cameraAzimuth = 135;
+    let cameraElevation = 45;
+
+    updateCameraPosition();
+
+    //For mouse controlls
+    function onMouseMove(event) {
+        console.log('mouse move')
+        if (event.buttons & RIGHT_MOUSE_BUTTON) {
+            cameraAzimuth += -(event.movementX * AZIMUTH_SENSITIVITY);
+            cameraElevation += (event.movementY * ELEVATION_SENSITIVITY);
+            cameraElevation = Math.min(MAX_CAMERA_ELEVATION, Math.max(MIN_CAMERA_ELEVATION, cameraElevation));
+        }
+        if (event.buttons & MIDDLE_MOUSE_BUTTON) {
+            const forward = new THREE.Vector3(0, 0, 1).applyAxisAngle(Y_AXIS, cameraAzimuth * DEG2RAD);
+            const left = new THREE.Vector3(1, 0, 0).applyAxisAngle(Y_AXIS, cameraAzimuth * DEG2RAD);
+            cameraOrigin.add(forward.multiplyScalar(PAN_SENSITIVITY * event.movementY));
+            cameraOrigin.add(left.multiplyScalar(PAN_SENSITIVITY * event.movementX));
+        }
+        updateCameraPosition();
+    }
+
+
+    /**
+         * Event handler for `wheel` event
+         * @param {MouseEvent} event Mouse event arguments
+         */
+    function onMouseScroll(event) {
+        cameraRadius += event.deltaY * ZOOM_SENSITIVITY;
+        cameraRadius = Math.min(MAX_CAMERA_RADIUS, Math.max(MIN_CAMERA_RADIUS, cameraRadius));
+    }
+
+    function updateCameraPosition() {
+        camera.position.x = cameraRadius * Math.sin(cameraAzimuth * DEG2RAD) * Math.cos(cameraElevation * DEG2RAD);
+        camera.position.y = cameraRadius * Math.sin(cameraElevation * DEG2RAD);
+        camera.position.z = cameraRadius * Math.cos(cameraAzimuth * DEG2RAD) * Math.cos(cameraElevation * DEG2RAD);
+        camera.position.add(cameraOrigin)
+        camera.lookAt(cameraOrigin);
+        camera.updateMatrix();//called to apply the above changes 
+    }
+    return {
+        camera,
+        updateCameraPosition,
+        onMouseMove,
+        onMouseScroll
+    }
+}

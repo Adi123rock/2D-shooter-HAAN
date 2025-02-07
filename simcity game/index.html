@@ -15,32 +15,54 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="root-window">
-        <div id="render-target">
-          <div id="ui-toolbar">
-            <button id='button-bulldoze' class="ui-button selected" onclick="setActiveTool(event,'bulldoze')">BULLDOZE</button>
-            <button id='button-residential' class="ui-button" onclick="setActiveTool(event,'residential')">RESIDENTIAL</button>
-            <button id='button-commercial' class="ui-button" onclick="setActiveTool(event,'commercial')">COMMERCIAL</button>
-            <button id='button-industrial' class="ui-button" onclick="setActiveTool(event,'industrial')">INDUSTRIAL</button>
-            <button id='button-road' class="ui-button" onclick="setActiveTool(event,'road')">ROAD</button>
-          </div>
-        </div>  
+  <div id="root-window">
+    <!-- Three.js adds a `canvas` element to this element-->
+    <div id="render-target">
+      <div id="title-bar">
+        <div id="title-bar-left-items" class="title-bar-items">
+          10000Rs
+        </div>
+        <div id="title-bar-center-items" class="title-bar-items">
+          My City
+        </div>
+        <div id="title-bar-right-items" class="title-bar-items">
+          Population: <span id="population-counter">0</span>
+        </div>
+      </div>
+      <div id="ui-toolbar">
+        <button id='button-select' class="ui-button selected" data-type="select" onclick="game.onToolSelected(event)">
+          <img class="toolbar-icon" src="public/icons/select.png">
+        </button>
+        <button id='button-bulldoze' class="ui-button" data-type="bulldoze" onclick="game.onToolSelected(event)">
+          <img class="toolbar-icon" src="public/icons/bulldozer.png">
+        </button>
+        <button id='button-residential' class="ui-button" data-type="residential" onclick="game.onToolSelected(event)">
+          <img class="toolbar-icon" src="public/icons/house.png">
+        </button>
+        <button id='button-commercial' class="ui-button" data-type="commercial" onclick="game.onToolSelected(event)">
+          <img class="toolbar-icon" src="public/icons/office.png">
+        </button>
+        <button id='button-industrial' class="ui-button" data-type="industrial" onclick="game.onToolSelected(event)">
+          <img class="toolbar-icon" src="public/icons/factory.png">
+        </button>
+        <button id='button-road' class="ui-button" data-type="road" onclick="game.onToolSelected(event)">
+          <img class="toolbar-icon" src="public/icons/road.png">
+        </button>
+        <button id='button-pause' class="ui-button" onclick="game.togglePause()">
+          <img id='pause-button-icon' class="toolbar-icon" src="public/icons/pause.png">
+        </button>
+      </div>
+      <div id="info-overlay">
+        <div id="info-overlay-header">
+          <span>Tile Info</span>
+        </div>
+        <div id="info-overlay-details"></div>
+      </div>
     </div>
+  </div>
     <script type="module">
-        import {createGame} from './src/game.js';
-
-        let selectedControl=document.getElementById('button-bulldoze');
-        window.onload = () => {
-          window.game = createGame();
-        }
-        window.setActiveTool=(event,toolId) => {
-          if(selectedControl){
-            selectedControl.classList.remove('selected');
-          }
-          selectedControl=event.target;
-          selectedControl.classList.add('selected');
-          window.game.setActiveToolId(toolId);
-        }
+      import { createGame } from './src/game.js';
     </script>
 </body>
+
 </html>

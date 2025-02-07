@@ -1,5 +1,5 @@
 export function createCity(size) {
-    const data=[];//2D data array
+    const tiles=[];//2D data array
 
     initialize();//called before to make sure our data is initialized
     function initialize(){
@@ -9,7 +9,7 @@ export function createCity(size) {
                 const tile=createTile(x,y);
                 column.push(tile);
             }
-            data.push(column);
+            tiles.push(column);
         }
     }
 
@@ -18,13 +18,14 @@ export function createCity(size) {
         for(let x=0;x<size;x++){
             // const column=[];
             for(let y=0;y<size;y++){
-                data[x][y].update();
+                console.log(tiles[x][y]);
+                tiles[x][y].building?.update();
             }
         }
     }
     return{
         size,
-        data,
+        tiles,
         update
     }
 }
@@ -33,9 +34,7 @@ function createTile(x,y){
     return{
         x,
         y,
-        terrainId:'grass',
-        buildingId:undefined,
-        update(){
-        }
-    }
+        terrainId:'ground',
+        building:undefined,//building will be an building object
+    };
 }

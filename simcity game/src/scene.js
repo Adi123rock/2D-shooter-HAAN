@@ -1,125 +1,182 @@
 import * as THREE from 'three';
-import { createCamera } from './camera.js';
+import { createCameraManager } from './cameraManager.js';
 import { createAssetInstance } from './assets.js';
 export function createScene() {
     //Initial scene setup
-    const gameWindow=document.getElementById('render-target')
+    const gameWindow = document.getElementById('render-target')
     const scene = new THREE.Scene();
-    scene.background= new THREE.Color(0x777777);
+    // scene.background = new THREE.Color(0x777777);
 
-    const camera=createCamera(gameWindow);
+    const cameraManager = createCameraManager(gameWindow);
 
-    const renderer=new THREE.WebGLRenderer();
-    renderer.setSize(gameWindow.offsetWidth,gameWindow.offsetHeight);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(gameWindow.offsetWidth, gameWindow.offsetHeight);
+    renderer.setClearColor(0x000000, 0);//background color
+    renderer.shadowMap.enabled = true;//enables shadow mapping
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;//soft shadow mapping
     gameWindow.appendChild(renderer.domElement);
-    
-    const raycaster=new THREE.Raycaster();
-    const mouse=new THREE.Vector2();//for mouse controlls
-    let selectedObject=undefined;
 
-    let terrain=[];//keeps meshes of grass
-    let buildings=[];//keeps meshes of buildings
+    //variables for the object selection
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();//for mouse controlls
 
-    let onObjectSelected=undefined;
-    function initialize(city){
+    let activeObject = undefined;//last object that was selected
+    let hoverObject = undefined;//object the mouse is currently hovering over
+
+    // let terrain = [];//keeps meshes of grass
+    let buildings = [];//keeps meshes of buildings
+
+    // let onObjectSelected = undefined;
+    function initialize(city) {
         scene.clear();
-        terrain=[];
-        buildings=[];
-        for(let x=0;x<city.size;x++){
-            const column=[];
-            for(let y=0;y<city.size;y++){
-                const terrainId=city.data[x][y].terrainId;
-                const mesh=createAssetInstance(terrainId,x,y);//1.Create the mesh
+        // terrain = [];
+        buildings = [];
+        for (let x = 0; x < city.size; x++) {
+            const column = [];
+            for (let y = 0; y < city.size; y++) {
+                // const terrainId = city.data[x][y].terrainId;
+                // console.log(city.data)
+                const mesh = createAssetInstance(city.tiles[x][y].terrainId, x, y);//1.Create the mesh
                 scene.add(mesh);//2.Add that mesh to the scene
                 column.push(mesh);//3.Add that mesh to the meshes array
-                
+
             }
-            terrain.push(column);
+            // terrain.push(column);
             buildings.push([...Array(city.size)])//creates columns of undefined value 
         }
         setupLights();
     }
-    function update(city){
-        for(let x=0;x<city.size;x++){
-            for(let y=0;y<city.size;y++){
-                //BUILDING GEOMETRY
-                const currentBuildingId=buildings[x][y]?.userData.id;
-                const newBuildingId=city.data[x][y].buildingId;
-                //if the player removes a building, remove it from the scene
-                if(!newBuildingId && currentBuildingId){
-                    scene.remove(buildings[x][y]);
-                    buildings[x][y]=undefined;
+    function update(city) {
+        for (let x = 0; x < city.size; x++) {
+            for (let y = 0; y < city.size; y++) {
+                const tile = city.tiles[x][y];
+                const existingBuildingMesh = buildings[x][y];
+                
+                // If there's no building in the tile but there is a mesh, remove it
+                if (!tile.building && existingBuildingMesh) {
+                    scene.remove(existingBuildingMesh);
+                    buildings[x][y] = undefined;
                 }
-                //If the data model has changed, update the mesh
-                if(newBuildingId && newBuildingId!==currentBuildingId){
-                    scene.remove(buildings[x][y]);
-                    buildings[x][y]=createAssetInstance(newBuildingId,x,y);
+                // If there's a building and it needs updating, update it
+                else if (tile.building && tile.building.updated) {
+                    if (existingBuildingMesh) {
+                        scene.remove(existingBuildingMesh);
+                    }
+                    buildings[x][y] = createAssetInstance(tile.building.type, x, y, tile.building);
                     scene.add(buildings[x][y]);
+                    tile.building.updated = false;
                 }
             }
         }
     }
 
-    function setupLights(){
-        const lights=[
-            new THREE.AmbientLight(0xffffff,0.2),//base lightning
-            new THREE.DirectionalLight(0xffffff,0.3),
-            new THREE.DirectionalLight(0xffffff,0.3),
-            new THREE.DirectionalLight(0xffffff,0.3)
-        ];
+    function setupLights() {
+        const sun = new THREE.DirectionalLight(0xffffff, 1)
+        sun.position.set(20, 20, 20);
+        sun.castShadow = true;
+        sun.shadow.camera.left = - 10;
+        sun.shadow.camera.right = 10;
+        sun.shadow.camera.top = 0;
+        sun.shadow.camera.bottom = - 10;
+        sun.shadow.mapSize.width = 1024;//quality
+        sun.shadow.mapSize.height = 1024;//quality
+        sun.shadow.camera.near = 0.5;
+        sun.shadow.camera.far = 50;
+        scene.add(sun);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+        // const helper = new THREE.CameraHelper(sun.shadow.camera);
+        // scene.add(helper);
 
-        lights[1].position.set(0,1,0);
-        lights[2].position.set(1,1,0);
-        lights[3].position.set(0,1,1);
-
-        scene.add(...lights);//"..." unpacks the array
     }
-    function draw(){
-        renderer.render(scene,camera.camera);
+    function draw() {
+        renderer.render(scene, cameraManager.camera);
     }
-    function start(){
+    function start() {
         renderer.setAnimationLoop(draw);
     }
-    function stop(){
+    function stop() {
         renderer.setAnimationLoop(null);
     }
 
-    //For mouse controlls
-    function onMouseDown(event){
-        camera.onMouseDown(event);
-        mouse.x=(event.clientX/renderer.domElement.clientWidth)*2-1;//normalizes mouse position, so that it's between -1 and 1, instead of 0 and 1, because the mouse position is relative to the canvas, not the window
-        mouse.y=-(event.clientY/renderer.domElement.clientHeight)*2+1;
-        
-        raycaster.setFromCamera(mouse,camera.camera);//sets the raycaster to the mouse position
+    /**  
+     * Resizes the renderer to fit the current game window
+    */
+    function onResize() {
+        cameraManager.camera.aspect = gameWindow.offsetWidth / gameWindow.offsetHeight;
+        cameraManager.camera.updateProjectionMatrix();
+        renderer.setSize(gameWindow.offsetWidth, gameWindow.offsetHeight);
+    }
+    /**  Sets the object that is currently highlighted
+    * @param {THREE.Mesh} object
+    */
+    function setHighlightedObject(object) {
+        // Unhighlight the previously hovered object (if it isn't currently selected)
+        if (hoverObject && hoverObject !== activeObject) {
+            setObjectEmission(hoverObject, 0x000000);
+        }
+        hoverObject = object;
 
-        let intersections=raycaster.intersectObjects(scene.children,false);//returns an array of objects that are intersected by the raycaster sorted by distance with closest object first in list
-        console.log(intersections.length);
-        if(intersections.length>0){
-            if(selectedObject) selectedObject.material.emissive.setHex(0);//sets the emissive color of the object to black
-            selectedObject=intersections[0]?.object;//sets the selected object to the first object that is intersected by the raycaster
-            selectedObject.material.emissive.setHex(0x555555)
-            console.log(selectedObject.userData);
-            if(this.onObjectSelected){
-                console.log('object selected');
-                this.onObjectSelected(selectedObject);
-            }
+        if (hoverObject) {
+            // Highlight the new hovered object (if it isn't currently selected) )
+            setObjectEmission(hoverObject, 0x555555);
         }
     }
-    function onMouseUp(event){
-        camera.onMouseUp(event);
+    /** 
+        Gets the object currently under the mouse cursor. If there is nothing under
+    the mouse cursor, returns null
+    
+    @param {MouseEvent} event Mouse event
+    */
+    function getSelectedObject(event) {
+        // Compute normalized mouse coordinates
+        mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+        mouse.y = - (event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, cameraManager.camera);
+        let intersections = raycaster.intersectObjects(scene.children, false);
+        if (intersections.length > 0) {
+            return intersections[0].object;
+        } else {
+            return null;
+        }
     }
-    function onMouseMove(event){
-        camera.onMouseMove(event);
+
+    /** 
+    * Sets the currently selected object and highlights it
+   * @param {object} object 
+   */
+    function setActiveObject(object) {
+        // Clear highlight on previously active object
+        setObjectEmission(activeObject, 0x000000);
+        activeObject = object;
+        // Highlight new active object
+        setObjectEmission(activeObject, 0xaaaa55);
+    }
+    
+    /**
+    * Updates the material properties of the object to have the
+    * specified emission color
+    * @param {THREE.Mesh} object 
+    * @param {number} color 
+    * @returns 
+    */
+    function setObjectEmission(object, color) {
+        if (!object) return;
+        if (Array.isArray(object.material)) {
+          object.material.forEach(material => material.emissive?.setHex(color));
+        } else {
+          object.material.emissive?.setHex(color);
+        }
     }
 
     return {
-        onObjectSelected,
+        cameraManager,
         initialize,
         update,
         start,
         stop,
-        onMouseDown,
-        onMouseUp,
-        onMouseMove
+        onResize,
+        getSelectedObject,
+        setActiveObject,
+        setHighlightedObject
     }
 }

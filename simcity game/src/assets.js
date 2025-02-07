@@ -1,55 +1,95 @@
 //this will create our assets
 import * as THREE from 'three';
 
-const geometry=new THREE.BoxGeometry(1,1,1);
-const assets={
-    'grass':(x,y)=>{
-        //GRASS GEOMETRY
+const cube = new THREE.BoxGeometry(1, 1, 1);
 
-        //1.Load the mesh/3D object corresponding to the tile at (x,y)
-        const material=new THREE.MeshLambertMaterial({color:0x00aa00});//this material supports lightning
-        const mesh=new THREE.Mesh(geometry,material);
-        mesh.userData={id:'grass',x,y};
-        mesh.position.set(x,-0.5,y);//-0.5 takes the grass below the plane
-        return mesh;
-    },
-    'residential':(x,y)=>{
-        const material=new THREE.MeshLambertMaterial({color:0x00ff00});
-        const mesh=new THREE.Mesh(geometry,material);
-        mesh.userData={id:'residential',x,y};
-        mesh.position.set(x,0.5,y);
-        return mesh;
-    },
-    'commercial':(x,y)=>{
-        const material=new THREE.MeshLambertMaterial({color:0x0000ff});
-        const mesh=new THREE.Mesh(geometry,material);
-        mesh.userData={id:'commercial',x,y};
-        mesh.position.set(x,0.5,y);
-        return mesh;
-    },
-    'industrial':(x,y)=>{
-        const material=new THREE.MeshLambertMaterial({color:0xffff00});
-        const mesh=new THREE.Mesh(geometry,material);
-        mesh.userData={id:'industrial',x,y};
-        mesh.position.set(x,0.5,y);
-        return mesh;
-    },
-    'road':(x,y)=>{
-        const material=new THREE.MeshLambertMaterial({color:0x4444440});
-        const mesh=new THREE.Mesh(geometry,material);
-        mesh.userData={id:'road',x,y};
-        mesh.scale.set(1,0.1,1);
-        mesh.position.set(x,0.05,y);
-        return mesh;
-    }
-}//dictionary that maps assetId to a function
+let loader = new THREE.TextureLoader();//loads textures
+function loadTexture(url) {
+    const tex = loader.load(url);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(1, 1);
+    return tex
+}
+const textures = {
+    'grass': loadTexture('public/textures/grass.png'),
+    'residential1': loadTexture('public/textures/residential1.png'),
+    'residential2': loadTexture('public/textures/residential2.png'),
+    'residential3': loadTexture('public/textures/residential3.png'),
+    'commercial1': loadTexture('public/textures/commercial1.png'),
+    'commercial2': loadTexture('public/textures/commercial2.png'),
+    'commercial3': loadTexture('public/textures/commercial3.png'),
+    'industrial1': loadTexture('public/textures/industrial1.png'),
+    'industrial2': loadTexture('public/textures/industrial2.png'),
+    'industrial3': loadTexture('public/textures/industrial3.png')
+};
+function getTopMaterial() {
+    return new THREE.MeshLambertMaterial({ color: 0x555555 });
+}
+function getSideMaterial(textureName) {
+    return new THREE.MeshLambertMaterial({ map: textures[textureName].clone() });//creates new texture object but it reuses the image in memory, cloneing becuse to get uniques instances
+}
+/** 
+*Creates a new 3D asset
+*@param {string} type The id of the asset to create
+*@param {number} x The x-coordinate of the asset
+*@param {number} y The y-coordinate of the asset
+*@param {object} data Additional metadata needed for creating the asset
+*@returns
 
-export function createAssetInstance(assetId,x,y){
-    if(assetId in assets){
-        return assets[assetId](x,y);//it returns a function so we are giving it input
+*/
+export function createAssetInstance(type, x, y, data) {
+    if (type in assets) {
+        return assets[type](x, y, data);//it returns a function so we are giving it input
     }
-    else{
-        console.warn(`Asset with id ${assetId} is not found`);
+    else {
+        console.warn(`Asset Type ${type} is not found`);
         return undefined;
     }
 }
+//Asset library
+const assets = {
+    'ground': (x, y) => {
+        const material = new THREE.MeshLambertMaterial({ map: textures.grass });
+        const mesh = new THREE.Mesh(cube, material);
+        mesh.userData = { x, y };
+        mesh.position.set(x, - 0.5, y);
+        mesh.receiveShadow = true;
+        return mesh;
+    },
+    'residential': (x, y, data) => createZoneMesh(x, y, data),
+    'commercial': (x, y, data) => createZoneMesh(x, y, data),
+    'industrial': (x, y, data) => createZoneMesh(x, y, data),
+    'road': (x, y) => {
+        const material = new THREE.MeshLambertMaterial({ color: 0x222222 });
+        const mesh = new THREE.Mesh(cube, material);
+        mesh.userData = { x, y };
+        mesh.scale.set(1, 0.02, 1);
+        mesh.position.set(x, 0.01, y);
+        mesh.receiveShadow = true;
+        return mesh;
+    }
+}
+
+function createZoneMesh(x, y, data) {
+    const textureName = data.type + data.style;
+
+    const topMaterial = getTopMaterial();
+    const sideMaterial = getSideMaterial(textureName);
+    let materialArray = [
+        sideMaterial,// +X
+        sideMaterial,// -X
+        topMaterial, // +Y
+        topMaterial,// -Y
+        sideMaterial,// +Z
+        sideMaterial,//-Z
+    ];
+    let mesh = new THREE.Mesh(cube, materialArray);
+    mesh.userData = { x, y };
+    mesh.scale.set(0.8, (data.height - 0.95) / 2, 0.8);
+    mesh.material.forEach(material => material.map?.repeat.set(1, data.height - 1));
+    mesh.position.set(x, (data.height - 0.95) / 4, y);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;//shadows of one buildings on other buildings
+    return mesh;
+} 
